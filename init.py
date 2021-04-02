@@ -10,8 +10,8 @@ def main(argv):
   os.rename('base.docker-compose.yaml.template', 'base.docker-compose.yaml')
   os.rename('proxy/x.env.template', 'proxy/x.env')
   os.rename('proxy/x.docker-compose.yaml.template', 'proxy/x.docker-compose.yaml')
-  os.rename('proxy/volumes/traefik/dynamic_conf.toml.template', 'proxy/volumes/traefik/dynamic_conf.toml')
-  os.rename('proxy/volumes/traefik/traefik.toml.template', 'proxy/volumes/traefik/traefik.toml')
+  os.rename('proxy/traefik/dynamic_conf.toml.template', 'proxy/traefik/dynamic_conf.toml')
+  os.rename('proxy/traefik/traefik.toml.template', 'proxy/traefik/traefik.toml')
 
   print('%s%s [SUCCESS] %s You can now delete init.py as well: rm init.py' % (colors.fg.green, colors.bold, colors.reset))
 

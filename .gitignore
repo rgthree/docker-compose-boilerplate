@@ -5,5 +5,4 @@
 !/README.md
 !/*.py
 !/*.template
-!/proxy/*.template
-!/proxy/volumes/**/*
+!/proxy/**/*

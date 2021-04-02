@@ -1,0 +1,44 @@
+[global]
+  checkNewVersion = false
+  sendAnonymousUsage = false
+
+[accessLog]
+  filePath = "/var/log/access.log"
+
+  [accessLog.filters]
+    statusCodes = ["303", "400-599"] # 303 is used by sonarr for an error login, redirecting back to login.
+    # retryAttempts = true
+    # minDuration = "10ms"
+
+[log]
+  level = "DEBUG"
+
+[serversTransport]
+  insecureSkipVerify = true
+  maxIdleConnsPerHost = 0
+
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+  [entryPoints.https]
+    address = ":443"
+    [entryPoints.https.forwardedHeaders]
+      # Allow X-Forwarded-* headers, so we can see the user's IP in logs,
+      # not Cloudflare's. See  # https://www.cloudflare.com/ips/
+      trustedIPs = ["173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22", "141.101.64.0/18", "108.162.192.0/18", "190.93.240.0/20", "188.114.96.0/20", "197.234.240.0/22", "198.41.128.0/17", "162.158.0.0/15", "104.16.0.0/12", "172.64.0.0/13", "131.0.72.0/22"]
+
+[providers]
+  providersThrottleDuration = "2s"
+  [providers.docker]
+    watch = true
+    endpoint = "unix:///var/run/docker.sock"
+    swarmModeRefreshSeconds = "15s"
+    # The network name to use to avoid networking issues between networks.
+    network = "traefik_proxy"
+    # This will hide all docker containers that don't have explicitly
+    # set label to "enable"
+    exposedbydefault = false
+  [providers.file]
+    # Enable the file provider to define routers / middlewares / services in a file
+    watch = true
+    filename = "/etc/traefik/dynamic_conf.toml"
