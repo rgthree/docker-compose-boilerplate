@@ -45,7 +45,7 @@ def generate_docker_compose(argv):
     OUTPUT_DOCKER_COMPOSE = '%s/%s' % (SUBDIR_REL, OUTPUT_DOCKER_COMPOSE_FILE)
 
     X_BASE_MIXIN_PATTERN = re.compile(r'(\s*)x-base:\s*true.*')
-    X_BASE_MIXIN_PATTERN = re.compile(r'(\s*)x-base-no-networks-for-fail2ban:\s*true.*')
+    X_BASE_MIXIN_PATTERN = re.compile(r'(\s*)x-base-no-networks:\s*true.*')
 
     if os.path.isfile(X_ENV):
       print('%s -> Generating %s by combining %s and %s' % (colors.reset, OUTPUT_ENV, BASE_ENV, X_ENV))
@@ -62,8 +62,8 @@ def generate_docker_compose(argv):
           for f in [BASE_DOCKER_COMPOSE, X_DOCKER_COMPOSE]:
               with open(f,'rb') as fd:
                   for line in fd:
-                      line = line.replace('x-base: true', '<<: *base')
-                      line = line.replace('x-base-no-networks: true', '<<: *base-no-networks')
+                      line = line.replace('x-base: true'.encode(), '<<: *base'.encode())
+                      line = line.replace('x-base-no-networks: true'.encode(), '<<: *base-no-networks'.encode())
                       wfd.write(line)
                   wfd.write("\n".encode())
 
@@ -160,7 +160,7 @@ def generate_docker_compose(argv):
 
     print('%s -> Outputting %s' % (colors.reset, OUTPUT_DOCKER_COMPOSE))
     with open(OUTPUT_DOCKER_COMPOSE, 'w') as fp:
-        fp.write(("# %s\n" % GENERATED_STRING).encode())
+        fp.write("# %s\n" % GENERATED_STRING)
         yaml.indent(mapping=2, sequence=2, offset=2)
         yaml.dump(data, fp)
 

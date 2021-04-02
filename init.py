@@ -13,7 +13,7 @@ def main(argv):
   os.rename('proxy/volumes/traefik/dynamic_conf.toml.template', 'proxy/volumes/traefik/dynamic_conf.toml')
   os.rename('proxy/volumes/traefik/traefik.toml.template', 'proxy/volumes/traefik/traefik.toml')
 
-  print('%s [SUCCESS] %s You can now delete init.py as well.' % (colors.fg.green, colors.reset))
+  print('%s%s [SUCCESS] %s You can now delete init.py as well: rm init.py' % (colors.fg.green, colors.bold, colors.reset))
 
 if __name__ == "__main__":
    main(sys.argv[1:])

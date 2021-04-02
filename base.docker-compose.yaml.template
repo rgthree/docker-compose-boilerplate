@@ -15,6 +15,6 @@ x-base-no-networks: &base-no-networks
     - /etc/localtime:/etc/localtime:ro
 
 x-base: &base
-  <<: *base-no-networks-for-fail2ban
+  <<: *base-no-networks
   networks:
     - default
