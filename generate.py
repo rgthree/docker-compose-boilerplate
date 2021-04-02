@@ -50,11 +50,11 @@ def generate_docker_compose(argv):
     if os.path.isfile(X_ENV):
       print('%s -> Generating %s by combining %s and %s' % (colors.reset, OUTPUT_ENV, BASE_ENV, X_ENV))
       with open(OUTPUT_ENV,'wb') as wfd:
-          wfd.write(b"# %s\n" % GENERATED_STRING)
+          wfd.write(("# %s\n" % GENERATED_STRING).encode())
           for f in [BASE_ENV, X_ENV]:
               with open(f,'rb') as fd:
                   shutil.copyfileobj(fd, wfd)
-                  wfd.write(b"\n")
+                  wfd.write("\n".encode())
 
     if os.path.isfile(X_DOCKER_COMPOSE):
       print('%s -> Generating temporary %s by combining %s and %s' % (colors.reset, OUTPUT_TEMP_DOCKER_COMPOSE, BASE_DOCKER_COMPOSE, X_DOCKER_COMPOSE))
@@ -65,7 +65,7 @@ def generate_docker_compose(argv):
                       line = line.replace('x-base: true', '<<: *base')
                       line = line.replace('x-base-no-networks: true', '<<: *base-no-networks')
                       wfd.write(line)
-                  wfd.write(b"\n")
+                  wfd.write("\n".encode())
 
     if os.path.isfile(OUTPUT_TEMP_DOCKER_COMPOSE):
       print('%s -> Using temporary %s' % (colors.reset, OUTPUT_TEMP_DOCKER_COMPOSE))
@@ -90,8 +90,8 @@ def generate_docker_compose(argv):
         # If we have an "x-volumes" then let's take it, and extend it on our current
         # list from a potential base.
         if 'x-volumes' in service:
-            print('%s   -> Combining x-volumes' % (colors.reset)
-            volumes_list = copy.deepcopy(service.get('volumes', ruamel.yaml.comments.CommentedSeq())))
+            print('%s   -> Combining x-volumes' % (colors.reset))
+            volumes_list = copy.deepcopy(service.get('volumes', ruamel.yaml.comments.CommentedSeq()))
             volumes_list.extend(service['x-volumes'])
             service.update({
               'volumes': volumes_list,
@@ -160,10 +160,10 @@ def generate_docker_compose(argv):
 
     print('%s -> Outputting %s' % (colors.reset, OUTPUT_DOCKER_COMPOSE))
     with open(OUTPUT_DOCKER_COMPOSE, 'w') as fp:
-        fp.write(b"# %s\n" % GENERATED_STRING)
+        fp.write(("# %s\n" % GENERATED_STRING).encode())
         yaml.indent(mapping=2, sequence=2, offset=2)
         yaml.dump(data, fp)
 
 
 if __name__ == "__main__":
-  generate_docker_compose(sys.argv[1:])
+   generate_docker_compose(sys.argv[1:])

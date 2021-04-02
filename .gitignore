@@ -5,6 +5,5 @@
 !/README.md
 !/*.py
 !/*.template
-!/boilerplate/*.py
 !/proxy/*.template
 !/proxy/volumes/**/*

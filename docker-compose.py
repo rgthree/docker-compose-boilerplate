@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import os, sys
-from boilerplate.colors import colors
-from boilerplate.generate_docker_compose import generate_docker_compose
+from colors import colors
+from generate import generate_docker_compose
 
 def docker_compose_run(argv):
     generate_docker_compose(argv)
@@ -21,4 +21,4 @@ def docker_compose_run(argv):
     sys.exit(0)
 
 if __name__ == "__main__":
-   dockerComposeRun(sys.argv[1:])
+   docker_compose_run(sys.argv[1:])

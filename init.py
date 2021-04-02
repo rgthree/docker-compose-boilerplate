@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import os, shutil
-from boilerplate.colors import colors
+import os, shutil, sys
+from colors import colors
 
 def main(argv):
   shutil.rmtree('.git')
