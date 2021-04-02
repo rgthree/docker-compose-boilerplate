@@ -1,0 +1,57 @@
+
+
+services:
+
+  traefik:
+    x-base: true
+    image: traefik:latest
+    networks:
+      - traefik_proxy
+    x-volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${VOLUMES}/traefik/traefik.toml:/etc/traefik/traefik.toml:ro
+      - ${VOLUMES}/traefik/dynamic_conf.toml:/etc/traefik/dynamic_conf.toml:ro
+      - ${VOLUMES}/traefik/log:/var/log
+      - ${VOLUMES}/ssl:/ssl
+    ports:
+      - "80:80"
+      - "443:443"
+
+  # Fail2ban
+  fail2ban:
+    x-base-no-networks: true
+    image: crazymax/fail2ban:latest
+    network_mode: "host"
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    x-volumes:
+      - ${VOLUMES}/traefik/log/access.log:/var/log/access.log:ro
+      - ${VOLUMES}/fail2ban/fail2ban.log:/var/log/fail2ban.log
+      - ${VOLUMES}/fail2ban/data:/data
+    x-environment:
+      - F2B_LOG_TARGET=/var/log/fail2ban.log
+
+  # Updates cloudflare with new subdomains added to traefik labels.
+  cf-companion:
+    x-base: true
+    image: tiredofit/traefik-cloudflare-companion:latest
+    x-volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    x-environment:
+      - TRAEFIK_VERSION=2
+      - CF_EMAIL=${CLOUDFLARE_EMAIL}
+      - CF_TOKEN=${CLOUDFLARE_API_KEY}
+      - TARGET_DOMAIN=${DOMAIN}
+      - DOMAIN1=${DOMAIN}
+      - DOMAIN1_ZONE_ID=${CLOUDFLARE_DOMAIN_ZONE_ID}
+      - DOMAIN1_PROXIED=TRUE
+
+  # Updates cloudflare if run from a dynamic IP
+  cloudflare-ddns:
+    x-base: true
+    image: oznu/cloudflare-ddns
+    x-environment:
+      - API_KEY=${CLOUDFLARE_SCOPED_API_KEY}
+      - ZONE=${DOMAIN}
+      - PROXIED=true
