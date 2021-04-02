@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import os, sys, copy, shutil
 import re
@@ -73,7 +73,7 @@ def generate_docker_compose(argv):
           data = yaml.load(file)
       os.remove(OUTPUT_TEMP_DOCKER_COMPOSE)
     else:
-      print '%s -> Using templated %s' % (colors.reset, TPL_DOCKER_COMPOSE)
+      print('%s -> Using templated %s' % (colors.reset, TPL_DOCKER_COMPOSE))
       with open(TPL_DOCKER_COMPOSE) as file:
           data = yaml.load(file)
 
@@ -84,7 +84,7 @@ def generate_docker_compose(argv):
         # If there's no container_name set, then set the service name to it, otherwise docker-compose
         # will append a "_1" and sometimes a prefix.
         if not 'container_name' in service:
-            print '%s   -> Setting container_name to %s' % (colors.reset, service_name)
+            print('%s   -> Setting container_name to %s' % (colors.reset, service_name))
             service.insert(0, 'container_name', service_name, comment='Generated.')
 
         # If we have an "x-volumes" then let's take it, and extend it on our current

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import os, shutil
 from boilerplate.colors import colors
@@ -6,7 +6,6 @@ from boilerplate.colors import colors
 def main(argv):
   shutil.rmtree('.git')
   os.remove('.gitignore')
-  os.remove('proxy/volumes/traefik/log/.gitkeep')
   os.rename('base.env.template', 'base.env')
   os.rename('base.docker-compose.yaml.template', 'base.docker-compose.yaml')
   os.rename('proxy/x.env.template', 'proxy/x.env')
