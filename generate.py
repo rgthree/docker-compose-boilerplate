@@ -116,7 +116,7 @@ def generate_docker_compose(argv):
 
             rule = x_traefik['rule'] if 'rule' in x_traefik else ''
             if not rule:
-              domain = x_traefik['domain'] if 'domain' in x_traefik else '${LAB_DOMAIN}'
+              domain = x_traefik['domain'] if 'domain' in x_traefik else '${DOMAIN}'
               subdomain = x_traefik['subdomain'] if 'subdomain' in x_traefik else ''
               host = '%s.%s' % (subdomain, domain) if subdomain else domain
               rule = 'Host(`%s`)' % (host)
@@ -132,7 +132,7 @@ def generate_docker_compose(argv):
             labels_list.extend([
               # Http - Redirects to http in the traefik config as "ssl-redirect"
               # Don't really need this since Cloudflare handles https only traffic.
-              'traefik.http.routers.%s-http.rule=Host(`%s.${LAB_DOMAIN}`)' % (service_name, subdomain),
+              'traefik.http.routers.%s-http.rule=%s' % (service_name, rule),
               'traefik.http.routers.%s-http.entrypoints=http' % service_name,
               'traefik.http.routers.%s-http.middlewares=ssl-redirect@file' % service_name,
               # Https
