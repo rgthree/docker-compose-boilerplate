@@ -121,9 +121,8 @@ def generate_docker_compose(argv):
               host = '%s.%s' % (subdomain, domain) if subdomain else domain
               rule = 'Host(`%s`)' % (host)
 
-            has_forward_auth = x_traefik['traefik-forward-auth']
             middlewares=['headers@file']
-            if has_forward_auth:
+            if 'traefik-forward-auth' in x_traefik and x_traefik['traefik-forward-auth']:
               middlewares.append('traefik-forward-auth')
             if 'additional-middlewares' in x_traefik:
               middlewares.extend(x_traefik['additional-middlewares'])
@@ -132,14 +131,14 @@ def generate_docker_compose(argv):
             labels_list.insert(0, 'traefik.enable=true')
             labels_list.extend([
               # Http - Redirects to http in the traefik config as "ssl-redirect"
-              # 'traefik.http.routers.%s-http.rule=Host(`%s.${LAB_DOMAIN}`)' % (service_name, subdomain),
-              # 'traefik.http.routers.%s-http.entrypoints=http' % service_name,
-              # 'traefik.http.routers.%s-http.middlewares=ssl-redirect@file' % service_name,
+              # Don't really need this since Cloudflare handles https only traffic.
+              'traefik.http.routers.%s-http.rule=Host(`%s.${LAB_DOMAIN}`)' % (service_name, subdomain),
+              'traefik.http.routers.%s-http.entrypoints=http' % service_name,
+              'traefik.http.routers.%s-http.middlewares=ssl-redirect@file' % service_name,
               # Https
               'traefik.http.routers.%s.rule=%s' % (service_name, rule),
               'traefik.http.routers.%s.entrypoints=https' % service_name,
               'traefik.http.routers.%s.tls=true' % service_name,
-              # 'traefik.http.routers.%s.middlewares=headers@file%s' % (service_name, ',traefik-forward-auth' if has_forward_auth else ''),
               'traefik.http.routers.%s.middlewares=%s' % (service_name, ','.join(middlewares)),
             ])
             if 'loadbalancer-port' in x_traefik:
